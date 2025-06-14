@@ -11,6 +11,7 @@ var (
 	//go:embed *html
 	fs                          embed.FS
 	chainList, chainTitleSearch viewutil.Chain
+	chainFullSearch             viewutil.Chain
 	ruTranslation               = `
 {{define "list of hyphae"}}Список гиф{{end}}
 {{define "search:"}}Поиск: {{.}}{{end}}
@@ -18,12 +19,14 @@ var (
 {{define "search no results"}}Ничего не найдено.{{end}}
 {{define "x total"}}{{.}} всего.{{end}}
 {{define "go to hypha"}}Перейти к гифе <a class="wikilink{{if .HasExactMatch | not}} wikilink_new{{end}}" href="/hypha/{{.MatchedHyphaName}}">{{beautifulName .MatchedHyphaName}}</a>.{{end}}
+{{define "search text"}}Искать в тексте{{end}}
 `
 )
 
 func initViews() {
 	chainList = viewutil.CopyEnRuWith(fs, "view_list.html", ruTranslation)
 	chainTitleSearch = viewutil.CopyEnRuWith(fs, "view_title_search.html", ruTranslation)
+	chainFullSearch = viewutil.CopyEnRuWith(fs, "view_full_search.html", ruTranslation)
 }
 
 type listDatum struct {
@@ -60,5 +63,19 @@ func viewTitleSearch(meta viewutil.Meta, query string, hyphaName string, hasExac
 		Results:          results,
 		MatchedHyphaName: hyphaName,
 		HasExactMatch:    hasExactMatch,
+	})
+}
+
+type fullSearchData struct {
+	*viewutil.BaseData
+	Query   string
+	Results []string
+}
+
+func viewFullSearch(meta viewutil.Meta, query string, results []string) {
+	viewutil.ExecutePage(meta, chainFullSearch, fullSearchData{
+		BaseData: &viewutil.BaseData{},
+		Query:    query,
+		Results:  results,
 	})
 }

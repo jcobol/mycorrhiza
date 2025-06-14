@@ -16,6 +16,7 @@ import (
 	"github.com/bouncepaw/mycorrhiza/internal/files"
 	"github.com/bouncepaw/mycorrhiza/internal/hyphae"
 	"github.com/bouncepaw/mycorrhiza/internal/mimetype"
+	"github.com/bouncepaw/mycorrhiza/internal/search"
 	"github.com/bouncepaw/mycorrhiza/internal/user"
 )
 
@@ -92,6 +93,7 @@ func UploadText(h hyphae.Hypha, data []byte, userMessage string, u *user.User) e
 
 		hyphae.Insert(H)
 		backlinks.UpdateBacklinksAfterEdit(H, "")
+		search.UpdateAfterEdit(H, "")
 	case *hyphae.MediaHypha:
 		// TODO: that []byte(...) part should be removed
 		if bytes.Equal(data, []byte(oldText)) {
@@ -107,6 +109,7 @@ func UploadText(h hyphae.Hypha, data []byte, userMessage string, u *user.User) e
 		}
 
 		backlinks.UpdateBacklinksAfterEdit(h, oldText)
+		search.UpdateAfterEdit(h, oldText)
 	case *hyphae.TextualHypha:
 		oldText, err := hyphae.FetchMycomarkupFile(h)
 		if err != nil {
@@ -128,6 +131,7 @@ func UploadText(h hyphae.Hypha, data []byte, userMessage string, u *user.User) e
 		}
 
 		backlinks.UpdateBacklinksAfterEdit(h, oldText)
+		search.UpdateAfterEdit(h, oldText)
 	}
 
 	hop.Apply()

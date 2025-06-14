@@ -3,10 +3,11 @@
 {{define "body"}}
 <main class="main-width">
 	<h1>{{block "search results for" .Query}}Search results for ‘{{.}}’{{end}}</h1>
-	{{if .MatchedHyphaName}}
-		<p>{{block "go to hypha" .}}Go to hypha <a class="wikilink{{if .HasExactMatch | not}} wikilink_new{{end}}" href="/hypha/{{.MatchedHyphaName}}">{{beautifulName .MatchedHyphaName}}</a>.{{end}}</p>
-	{{end}}
-	{{if len .Results}}
+        {{if .MatchedHyphaName}}
+                <p>{{block "go to hypha" .}}Go to hypha <a class="wikilink{{if .HasExactMatch | not}} wikilink_new{{end}}" href="/hypha/{{.MatchedHyphaName}}">{{beautifulName .MatchedHyphaName}}</a>.{{end}}</p>
+        {{end}}
+        <p><a href="/search/?q={{.Query}}">{{block "search text" .}}Search in text{{end}}</a></p>
+        {{if len .Results}}
 		<ol>
         {{range .Results}}
 			<li>
