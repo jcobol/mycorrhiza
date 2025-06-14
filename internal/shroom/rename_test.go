@@ -47,7 +47,7 @@ func TestRenamingPairsIgnoresEmptyEntries(t *testing.T) {
 	}
 
 	oldPath := filepath.Join(files.HyphaeDir(), "old.myco")
-	newPath := filepath.Join(files.HyphaeDir(), "new.myco")
+	newPath := replace(oldPath)
 	if got, ok := renameMap[oldPath]; !ok || got != newPath {
 		t.Fatalf("expected mapping %s -> %s, got %v", oldPath, newPath, renameMap)
 	}
