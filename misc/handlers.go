@@ -15,6 +15,7 @@ import (
 	"github.com/bouncepaw/mycorrhiza/internal/cfg"
 	"github.com/bouncepaw/mycorrhiza/internal/files"
 	"github.com/bouncepaw/mycorrhiza/internal/hyphae"
+	"github.com/bouncepaw/mycorrhiza/internal/search"
 	"github.com/bouncepaw/mycorrhiza/internal/shroom"
 	"github.com/bouncepaw/mycorrhiza/internal/user"
 	"github.com/bouncepaw/mycorrhiza/l18n"
@@ -40,6 +41,7 @@ func InitHandlers(rtr *mux.Router) {
 	rtr.HandleFunc("/random", handlerRandom)
 	rtr.HandleFunc("/about", handlerAbout)
 	rtr.HandleFunc("/title-search/", handlerTitleSearch)
+	rtr.HandleFunc("/search/", handlerFullSearch)
 	initViews()
 }
 
@@ -183,4 +185,13 @@ func handlerTitleSearch(w http.ResponseWriter, rq *http.Request) {
 	}
 	w.WriteHeader(http.StatusOK)
 	viewTitleSearch(viewutil.MetaFrom(w, rq), query, hyphaName, !nameFree, results)
+}
+
+func handlerFullSearch(w http.ResponseWriter, rq *http.Request) {
+	util.PrepareRq(rq)
+	_ = rq.ParseForm()
+	query := rq.FormValue("q")
+	results := search.Search(query)
+	w.WriteHeader(http.StatusOK)
+	viewFullSearch(viewutil.MetaFrom(w, rq), query, results)
 }

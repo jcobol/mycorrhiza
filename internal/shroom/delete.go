@@ -7,6 +7,7 @@ import (
 	"github.com/bouncepaw/mycorrhiza/internal/backlinks"
 	"github.com/bouncepaw/mycorrhiza/internal/categories"
 	"github.com/bouncepaw/mycorrhiza/internal/hyphae"
+	"github.com/bouncepaw/mycorrhiza/internal/search"
 	"github.com/bouncepaw/mycorrhiza/internal/user"
 )
 
@@ -32,6 +33,7 @@ func Delete(u *user.User, h hyphae.ExistingHypha) error {
 		return hop.Errs[0]
 	}
 	backlinks.UpdateBacklinksAfterDelete(h, originalText)
+	search.UpdateAfterDelete(h, originalText)
 	categories.RemoveHyphaFromAllCategories(h.CanonicalName())
 	hyphae.DeleteHypha(h)
 	return nil

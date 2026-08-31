@@ -14,6 +14,7 @@ import (
 	"github.com/bouncepaw/mycorrhiza/internal/cfg"
 	"github.com/bouncepaw/mycorrhiza/internal/files"
 	"github.com/bouncepaw/mycorrhiza/internal/hyphae"
+	"github.com/bouncepaw/mycorrhiza/internal/search"
 	"github.com/bouncepaw/mycorrhiza/internal/user"
 	"github.com/bouncepaw/mycorrhiza/util"
 )
@@ -83,6 +84,7 @@ func Rename(oldHypha hyphae.ExistingHypha, newName string, recursive bool, leave
 		)
 		hyphae.RenameHyphaTo(h, newName, replaceName)
 		backlinks.UpdateBacklinksAfterRename(h, oldName)
+		search.UpdateAfterRename(h, oldName)
 		categories.RenameHyphaInAllCategories(oldName, newName)
 		if leaveRedirections {
 			if err := leaveRedirection(oldName, newName, hop); err != nil {
@@ -112,6 +114,7 @@ func leaveRedirection(oldName, newName string, hop *history.Op) error {
 		hyphae.Insert(h)
 		categories.AddHyphaToCategory(oldName, cfg.RedirectionCategory)
 		defer backlinks.UpdateBacklinksAfterEdit(h, "")
+		defer search.UpdateAfterEdit(h, "")
 		return writeTextToDisk(h, []byte(text), hop)
 	default:
 		return errors.New("invalid state for hypha " + oldName + " renamed to " + newName)
