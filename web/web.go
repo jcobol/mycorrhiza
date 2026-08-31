@@ -38,6 +38,7 @@ func Handler() http.Handler {
 		})
 	})
 	router.StrictSlash(true)
+	initAPI(router)
 
 	// Public routes. They're always accessible regardless of the user status.
 	misc.InitAssetHandlers(router)
