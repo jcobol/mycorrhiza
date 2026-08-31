@@ -236,9 +236,11 @@ func handlerUploadBinary(w http.ResponseWriter, rq *http.Request) {
 	)
 	if err != nil {
 		viewutil.HttpErr(meta, http.StatusInternalServerError, hyphaName, err.Error())
+		return
 	}
 	if err := shroom.CanAttach(u, h, lc); err != nil {
 		viewutil.HttpErr(meta, http.StatusInternalServerError, hyphaName, err.Error())
+		return
 	}
 
 	// If file is not passed:
