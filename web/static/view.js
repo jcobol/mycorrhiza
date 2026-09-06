@@ -51,6 +51,31 @@ wrapper.appendChild(hamburgerSection);
     const copyIconSVG = `<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="5" y="5" width="9" height="9" rx="1.5"/><path d="M3.5 10.5h-1a1 1 0 0 1-1-1v-7a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v1"/></svg>`
     const checkIconSVG = `<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 8.5l3 3 7-7"/></svg>`
 
+    // navigator.clipboard is only defined in secure contexts (HTTPS or
+    // localhost), which plain-HTTP deployments behind no reverse proxy
+    // don't get. Fall back to the deprecated execCommand('copy') there,
+    // which still works over insecure origins.
+    const copyText = text => {
+        if (navigator.clipboard) return navigator.clipboard.writeText(text)
+
+        return new Promise((resolve, reject) => {
+            const textarea = document.createElement('textarea')
+            textarea.value = text
+            textarea.style.position = 'fixed'
+            textarea.style.top = '-1000px'
+            document.body.appendChild(textarea)
+            textarea.focus()
+            textarea.select()
+            try {
+                document.execCommand('copy') ? resolve() : reject(new Error('execCommand copy failed'))
+            } catch (err) {
+                reject(err)
+            } finally {
+                document.body.removeChild(textarea)
+            }
+        })
+    }
+
     for (const pre of document.querySelectorAll('pre.codeblock')) {
         const codeEl = pre.querySelector('code')
         if (!codeEl) continue
@@ -64,11 +89,7 @@ wrapper.appendChild(hamburgerSection);
 
         let resetTimer = null
         button.addEventListener('click', () => {
-            const copying = navigator.clipboard
-                ? navigator.clipboard.writeText(codeEl.textContent)
-                : Promise.reject(new Error('Clipboard API unavailable'))
-
-            copying.then(() => {
+            copyText(codeEl.textContent).then(() => {
                 button.innerHTML = checkIconSVG
                 button.classList.add('codeblock__copy-btn_success')
                 button.classList.remove('codeblock__copy-btn_error')
