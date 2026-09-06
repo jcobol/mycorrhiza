@@ -121,8 +121,29 @@ main h2, main h3, main h4, main h5, main h6 { margin: 1.5rem 0 0 0; clear: both;
 article p { margin: .5rem 0; }
 article ul, ol { padding-left: 1.5rem; margin: .5rem 0; }
 article code { padding: .1rem .3rem; border-radius: .25rem; font-size: 90%; font-family: 'Menlo', 'PT Mono', monospace; }
-article pre.codeblock { padding:.5rem; white-space: pre-wrap; border-radius: .25rem;}
+article pre.codeblock { position: relative; padding:.5rem; white-space: pre-wrap; border-radius: .25rem;}
 .codeblock code {padding:0; font-size:15px; tab-size: 3; }
+
+.codeblock__copy-btn {
+	position: absolute;
+	top: .25rem;
+	right: .25rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 1.75rem;
+	height: 1.75rem;
+	padding: 0;
+	border: 1px #999 solid;
+	border-radius: .25rem;
+	background-color: rgba(255, 255, 255, 0.6);
+	color: inherit;
+	cursor: pointer;
+	opacity: .6;
+}
+.codeblock__copy-btn:hover { opacity: 1; }
+.codeblock__copy-btn_success { border-color: #2e8b2e; color: #2e8b2e; opacity: 1; }
+.codeblock__copy-btn_error { border-color: #a55858; color: #a55858; opacity: 1; }
 .transclusion { border-radius: .25rem; margin-bottom: .25rem; clear: both; }
 .transclusion_failed { padding: 0 .5rem; }
 .transclusion__content > *:not(.binary-container) {margin: 0.5rem; }
@@ -236,6 +257,10 @@ article .codeblock,
 textarea,
 table { border: 0; background-color: #444444; color: #ddd; }
 .transclusion_stand-out { background-color: rgba(68, 68, 68, 0.5); }
+
+.codeblock__copy-btn { border-color: #444; background-color: rgba(0, 0, 0, 0.4); }
+.codeblock__copy-btn_success { border-color: #4cd74c; color: #4cd74c; }
+.codeblock__copy-btn_error { border-color: #dd4444; color: #dd4444; }
 
 .transclusion code,
 .transclusion .codeblock { background-color: #454545; }
